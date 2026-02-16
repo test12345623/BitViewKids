@@ -26,6 +26,10 @@
         .stats-display { font-size: 12px; color: #666; font-weight: 600; }
         .verified-check { color: var(--ytk-blue); font-size: 14px; margin-left: 3px; display: none; }
 
+        /* --- SEARCH --- */
+        .search-box { flex: 1; display: flex; max-width: 500px; margin: 0 20px; }
+        .search-in { width: 100%; padding: 10px 20px; border-radius: 50px; border: 2px solid #F0F0F0; background: #FAFAFA; outline: none; font-family: 'Fredoka'; font-size: 16px; }
+
         /* --- UI ELEMENTS --- */
         .btn { padding: 10px 22px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-family: 'Fredoka'; transition: 0.2s; }
         .btn-red { background: var(--ytk-red); color: white; box-shadow: 0 4px 0 #9A0007; }
@@ -40,7 +44,6 @@
         /* --- VIDEO GRID --- */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px; }
         .video-card { background: white; padding: 15px; border-radius: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); transition: 0.3s; }
-        .video-card:hover { transform: translateY(-5px); }
         .video-container { position: relative; width: 100%; border-radius: 15px; overflow: hidden; background: black; aspect-ratio: 16/9; cursor: pointer; }
         video { width: 100%; height: 100%; display: block; }
         .view-txt { font-size: 13px; color: #777; margin: 8px 0; display: block; }
@@ -50,8 +53,8 @@
         .modal-box { background: white; padding: 35px; border-radius: 30px; text-align: center; width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .modal-input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #EEE; border-radius: 15px; font-family: 'Fredoka'; font-size: 16px; outline: none; }
         
-        .progress-container { width: 100%; background: #F0F0F0; border-radius: 10px; height: 18px; margin: 15px 0; display: none; overflow: hidden; border: 1px solid #DDD; }
-        #progress-bar { width: 0%; height: 100%; background: linear-gradient(to right, #4CAF50, #81C784); transition: width 0.1s; }
+        .progress-container { width: 100%; background: #F0F0F0; border-radius: 10px; height: 18px; margin: 15px 0; display: none; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: #4CAF50; transition: width 0.1s; }
     </style>
 </head>
 <body>
@@ -60,7 +63,7 @@
         <div class="entry-content">
             <img src="assets/logo1.ico" class="entry-logo">
             <h1 style="color: var(--ytk-blue); font-size: 36px;">BitView Kids</h1>
-            <button class="btn btn-red" style="font-size: 20px; padding: 15px 40px;" onclick="enterSite()">Let's Go!</button>
+            <button class="btn btn-red" onclick="enterSite()">Let's Play!</button>
         </div>
     </div>
 
@@ -71,18 +74,18 @@
                 <img id="avatarImg" src="assets/logo1.ico">
                 <div id="badge" class="owner-badge">👑</div>
             </div>
-            <div>
-                <img src="assets/logo2.png" height="35" onclick="showHome()" style="cursor:pointer;">
-                <div id="owner-stats" style="display:none;">
-                    <span class="stats-display"><span id="real-subs">0</span> Subscribers</span>
-                    <span class="verified-check" id="v-check">✔</span>
-                </div>
+            <img src="assets/logo2.png" height="35" onclick="showHome()" style="cursor:pointer;">
+            <div id="owner-stats" style="display:none;">
+                <span class="stats-display"><span id="real-subs">0</span> Subs</span>
             </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-in" placeholder="Find a video..." oninput="filterVideos()">
         </div>
 
         <div id="guest-zone">
             <button class="btn" onclick="openModal('login')">Login</button>
-            <button class="btn" style="background:var(--ytk-blue); color:white" onclick="parentalGate()">Sign Up</button>
         </div>
 
         <div id="user-zone" style="display:none; gap:10px;">
@@ -98,39 +101,34 @@
 
     <main id="home-pg">
         <div style="text-align:center; padding: 20px;">
-            <h2>⭐ Trending Videos</h2>
-            <button class="btn btn-sub" onclick="addSubscriber()">Subscribe to BitViewOfficial</button>
+            <h2>⭐ Trending</h2>
+            <button class="btn btn-sub" onclick="addSubscriber()">Subscribe</button>
         </div>
         <div class="video-grid" id="trendingGrid"></div>
     </main>
 
     <div id="chan-pg" style="display:none; padding: 20px;">
-        <h2 style="text-align:center;">My Video Studio</h2>
+        <h2 style="text-align:center;">My Channel</h2>
         <div class="video-grid" id="videoGrid"></div>
     </div>
 
     <div id="upload-modal" class="modal">
         <div class="modal-box">
-            <h2>Upload Video</h2>
-            <input type="text" id="vid-name" class="modal-input" placeholder="Video Title">
-            <select id="vid-view" class="modal-input">
-                <option value="public">🌍 Public</option>
-                <option value="private">🔒 Private</option>
-            </select>
+            <h2>Video Details</h2>
+            <input type="text" id="vid-name" class="modal-input" placeholder="Title">
             <div class="progress-container" id="p-cont">
                 <div id="progress-bar"></div>
             </div>
             <p id="status-txt" style="font-size:12px; color:var(--ytk-blue); font-weight:bold;"></p>
-            <button class="btn btn-red" style="width:100%" id="up-finish" onclick="startUpload()">Publish Video</button>
-            <p onclick="closeModals()" style="cursor:pointer; color:#999; margin-top:15px;">Cancel</p>
+            <button class="btn btn-red" style="width:100%" id="up-finish" onclick="startUpload()">Upload</button>
         </div>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-box">
-            <h2>Welcome!</h2>
-            <input type="text" id="l-user" class="modal-input" placeholder="Username">
-            <button class="btn btn-red" style="width:100%; margin-top:10px;" onclick="login()">Enter</button>
+            <h2>Login</h2>
+            <input type="text" id="l-user" class="modal-input" placeholder="Name">
+            <button class="btn btn-red" style="width:100%" onclick="login()">Enter</button>
         </div>
     </div>
 
@@ -141,32 +139,15 @@
         bgMusic.loop = true;
         let selectedFile = null;
 
-        // REAL-TIME STATS (Persists in LocalStorage)
+        // DATA
         let subs = parseInt(localStorage.getItem('bitview_subs')) || 0;
         let videoViews = JSON.parse(localStorage.getItem('bitview_views')) || {};
 
-        function updateSubDisplay() {
-            document.getElementById('real-subs').innerText = subs.toLocaleString();
-        }
-
-        function addSubscriber() {
-            subs++;
-            localStorage.setItem('bitview_subs', subs);
-            updateSubDisplay();
-        }
-
         function enterSite() {
-            bgMusic.play().catch(e => console.log("Audio waiting..."));
+            bgMusic.play().catch(e => {});
             document.getElementById('entry-screen').style.opacity = '0';
             setTimeout(() => document.getElementById('entry-screen').style.display = 'none', 600);
             loadTrending();
-        }
-
-        function parentalGate() {
-            const n1 = Math.floor(Math.random()*9)+1;
-            const n2 = Math.floor(Math.random()*9)+1;
-            const ans = prompt(`PARENTS: What is ${n1} x ${n2}?`);
-            if(parseInt(ans) === n1*n2) alert("Passed! (Sign Up coming soon)");
         }
 
         function login() {
@@ -179,25 +160,22 @@
             document.getElementById('guest-zone').style.display = 'none';
             document.getElementById('user-zone').style.display = 'flex';
             document.getElementById('nav-c').style.display = 'block';
-
-            const isOwner = user.toLowerCase().includes('bitviewofficial') || user.toLowerCase().includes('bitviewkidsofficial');
+            const isOwner = user.toLowerCase().includes('bitviewofficial');
             if(isOwner) {
                 document.getElementById('avatarLetter').style.display = 'none';
                 document.getElementById('avatarImg').style.display = 'block';
                 document.getElementById('badge').style.display = 'flex';
                 document.getElementById('owner-stats').style.display = 'block';
-                document.getElementById('v-check').style.display = 'inline';
-                updateSubDisplay();
+                document.getElementById('real-subs').innerText = subs.toLocaleString();
             } else {
                 document.getElementById('avatarLetter').innerText = user[0].toUpperCase();
-                document.getElementById('userAvatar').style.backgroundColor = 'var(--ytk-blue)';
             }
         }
 
         function openStudio() {
             selectedFile = document.getElementById('fileInput').files[0];
             if(selectedFile) {
-                document.getElementById('vid-name').value = selectedFile.name.split('.')[0];
+                document.getElementById('vid-name').value = selectedFile.name;
                 openModal('upload');
             }
         }
@@ -205,27 +183,15 @@
         function startUpload() {
             const fd = new FormData();
             fd.append('video', selectedFile);
-            
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/api/upload', true);
-
             document.getElementById('p-cont').style.display = 'block';
-            document.getElementById('up-finish').disabled = true;
-
             xhr.upload.onprogress = (e) => {
                 const percent = Math.round((e.loaded / e.total) * 100);
                 document.getElementById('progress-bar').style.width = percent + '%';
                 document.getElementById('status-txt').innerText = `Uploading: ${percent}%`;
             };
-
-            xhr.onload = () => {
-                alert("Upload Complete!");
-                closeModals();
-                showChannel();
-                // Reset Studio
-                document.getElementById('p-cont').style.display = 'none';
-                document.getElementById('up-finish').disabled = false;
-            };
+            xhr.onload = () => { closeModals(); showChannel(); };
             xhr.send(fd);
         }
 
@@ -242,7 +208,6 @@
             document.getElementById('chan-pg').style.display = 'block';
             document.getElementById('nav-h').classList.remove('active');
             document.getElementById('nav-c').classList.add('active');
-            
             const res = await fetch('/api/videos');
             const videos = await res.json();
             const grid = document.getElementById('videoGrid');
@@ -253,15 +218,17 @@
         function createVideoCard(file, isOwner) {
             const card = document.createElement('div');
             card.className = 'video-card';
+            const title = file.split('-').slice(1).join('-');
             const views = videoViews[file] || 0;
+            card.setAttribute('data-title', title.toLowerCase());
             
             card.innerHTML = `
                 <div class="video-container" onclick="playVideo(this, '${file}')">
                     <video src="/assets/videos/${file}#t=0.5" preload="metadata"></video>
                 </div>
-                <p style="margin:12px 0 5px 0;"><strong>${file.split('-').slice(1).join('-')}</strong></p>
-                <span class="view-txt">👁️ <span id="v-count-${file.replace(/\./g, '')}">${views}</span> views</span>
-                ${isOwner ? `<button class="btn" style="color:red; font-size:12px; padding:5px 10px;" onclick="delV('${file}')">🗑️ Delete Video</button>` : ''}
+                <p><strong>${title}</strong></p>
+                <span class="view-txt">👁️ ${views} views</span>
+                ${isOwner ? `<button class="btn" style="color:red" onclick="delV('${file}')">Delete</button>` : ''}
             `;
             return card;
         }
@@ -269,25 +236,34 @@
         function playVideo(container, fileName) {
             const v = container.querySelector('video');
             if(v.paused) {
-                // View Count Logic
                 videoViews[fileName] = (videoViews[fileName] || 0) + 1;
                 localStorage.setItem('bitview_views', JSON.stringify(videoViews));
-                const vDisplay = document.getElementById(`v-count-${fileName.replace(/\./g, '')}`);
-                if(vDisplay) vDisplay.innerText = videoViews[fileName];
-
-                bgMusic.pause(); // MUTE MUSIC
+                bgMusic.pause();
                 v.play();
                 v.controls = true;
                 v.onpause = () => { if(!document.querySelector('video:not(.paused)')) bgMusic.play(); };
-                v.onended = () => bgMusic.play(); // UNMUTE MUSIC
             }
         }
 
+        function filterVideos() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.video-card').forEach(card => {
+                const title = card.getAttribute('data-title');
+                card.style.display = title.includes(q) ? 'block' : 'none';
+            });
+        }
+
         async function delV(f) {
-            if(confirm("Delete this video forever?")) {
+            if(confirm("Delete?")) {
                 await fetch(`/api/videos/${f}`, { method: 'DELETE' });
                 showChannel();
             }
+        }
+
+        function addSubscriber() {
+            subs++;
+            localStorage.setItem('bitview_subs', subs);
+            if(document.getElementById('real-subs')) document.getElementById('real-subs').innerText = subs.toLocaleString();
         }
 
         function showHome() {
