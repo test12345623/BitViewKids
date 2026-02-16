@@ -8,42 +8,119 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --ytk-blue: #4285F4; --ytk-red: #D32F2F; --bg-light: #FAFAFA; }
-        body { font-family: 'Fredoka', sans-serif; background: var(--bg-light); margin: 0; }
+        :root { 
+            --ytk-blue: #4285F4; 
+            --ytk-red: #D32F2F; 
+            --bg-light: #FAFAFA; 
+            --ytk-dark-blue: #2456CF;
+        }
+
+        body { 
+            font-family: 'Fredoka', sans-serif; 
+            background: var(--bg-light); 
+            margin: 0; 
+            overflow-x: hidden;
+        }
 
         /* HEADER */
-        header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 12px 24px; 
+            background: white; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+        }
+
         .left { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 45px; height: 45px; background: #00695C; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
-        .logo { height: 40px; }
-
-        /* SEARCH */
-        .search-box { flex: 1; display: flex; max-width: 600px; margin: 0 30px; }
-        .search-in { width: 100%; padding: 12px 20px; border-radius: 50px 0 0 50px; border: none; background: #F0F0F0; font-family: 'Fredoka'; outline: none; }
-        .search-btn { padding: 0 25px; border-radius: 0 50px 50px 0; border: none; background: #2456CF; color: white; cursor: pointer; }
-        .lock-icon { font-size: 24px; cursor: pointer; margin-left: 15px; opacity: 0.7; }
-
-        /* AUTH BUTTONS */
-        .auth-container { display: flex; gap: 10px; }
-        .btn { padding: 10px 20px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-family: 'Fredoka'; }
-        .login-btn { background: white; border: 2px solid #EEE; color: var(--ytk-blue); }
-        .signup-btn { background: var(--ytk-blue); color: white; box-shadow: 0 3px 0 #2a5db0; }
         
-        /* USER BUTTONS (Hidden by default) */
-        .upload-btn { background: var(--ytk-red); color: white; display: flex; align-items: center; gap: 5px; box-shadow: 0 3px 0 #9A0007; }
-        .logout-btn { background: #EEE; color: #555; }
+        .avatar { 
+            width: 45px; height: 45px; 
+            background: #CCC; border-radius: 50%; 
+            color: white; display: flex; 
+            align-items: center; justify-content: center; 
+            font-size: 20px; font-weight: bold; 
+        }
 
-        /* MODAL */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-        .modal-box { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 300px; }
-        .modal-input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #CCC; border-radius: 10px; font-family: 'Fredoka'; }
-        .modal-submit { width: 100%; padding: 10px; background: var(--ytk-blue); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .logo { height: 40px; cursor: pointer; }
 
-        /* CATEGORIES */
-        .nav { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
-        .nav-item { text-align: center; opacity: 0.5; cursor: pointer; }
-        .nav-item.active { opacity: 1; color: var(--ytk-red); }
-        .icon { font-size: 30px; display: block; }
+        /* SEARCH BAR */
+        .search-box { flex: 1; display: flex; max-width: 600px; margin: 0 30px; }
+        
+        .search-in { 
+            width: 100%; padding: 12px 20px; 
+            border-radius: 50px 0 0 50px; border: none; 
+            background: #F0F0F0; font-family: 'Fredoka'; 
+            outline: none; font-size: 16px;
+        }
+
+        .search-btn { 
+            padding: 0 25px; border-radius: 0 50px 50px 0; 
+            border: none; background: var(--ytk-dark-blue); 
+            color: white; cursor: pointer; font-size: 18px;
+        }
+
+        .lock-icon { font-size: 24px; cursor: pointer; margin-left: 15px; opacity: 0.6; transition: 0.2s; }
+        .lock-icon:hover { opacity: 1; transform: scale(1.1); }
+
+        /* BUTTONS */
+        .auth-container { display: flex; gap: 10px; align-items: center; }
+        
+        .btn { 
+            padding: 10px 22px; border-radius: 50px; 
+            font-weight: 600; cursor: pointer; 
+            border: none; font-family: 'Fredoka'; 
+            transition: 0.2s;
+        }
+
+        .login-btn { background: white; border: 2px solid #EEE; color: var(--ytk-blue); }
+        .signup-btn { background: var(--ytk-blue); color: white; box-shadow: 0 4px 0 #2a5db0; }
+        .signup-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #2a5db0; }
+
+        .upload-btn { background: var(--ytk-red); color: white; box-shadow: 0 4px 0 #9A0007; }
+        .logout-btn { background: #F0F0F0; color: #666; }
+
+        /* NAV CATEGORIES */
+        .nav { display: flex; justify-content: center; gap: 50px; margin: 25px 0; }
+        .nav-item { text-align: center; opacity: 0.5; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { opacity: 1; color: var(--ytk-red); transform: scale(1.1); }
+        .icon { font-size: 35px; display: block; margin-bottom: 5px; }
+
+        /* MODALS */
+        .modal { 
+            display: none; position: fixed; top:0; left:0; 
+            width:100%; height:100%; background: rgba(0,0,0,0.6); 
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+
+        .modal-box { 
+            background: white; padding: 40px; 
+            border-radius: 30px; text-align: center; 
+            width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-input { 
+            width: 90%; padding: 12px; margin: 10px 0; 
+            border: 2px solid #F0F0F0; border-radius: 15px; 
+            font-family: 'Fredoka'; outline: none; font-size: 16px;
+        }
+
+        .modal-submit { 
+            width: 100%; padding: 12px; 
+            background: var(--ytk-blue); color: white; 
+            border: none; border-radius: 50px; 
+            cursor: pointer; font-weight: bold; 
+            font-size: 18px; margin-top: 15px;
+        }
+
+        /* MUSIC NOTICE */
+        #music-hint {
+            position: fixed; bottom: 20px; left: 20px;
+            background: rgba(0,0,0,0.7); color: white;
+            padding: 8px 15px; border-radius: 20px; font-size: 12px;
+            pointer-events: none; animation: fadeOut 5s forwards;
+        }
+        @keyframes fadeOut { 0% {opacity:1} 80% {opacity:1} 100% {opacity:0} }
     </style>
 </head>
 <body>
@@ -51,11 +128,11 @@
     <header>
         <div class="left">
             <div class="avatar" id="userAvatar">👤</div>
-            <img src="assets/logo2.png" alt="BitView" class="logo">
+            <img src="assets/logo2.png" alt="BitView Kids" class="logo" onclick="location.reload()">
         </div>
 
         <div class="search-box">
-            <input type="text" class="search-in" placeholder="Search BitView Kids">
+            <input type="text" class="search-in" placeholder="Search for fun videos!">
             <button class="search-btn">🔍</button>
             <div class="lock-icon" onclick="parentalGate()" title="Parent Settings">🔒</div>
         </div>
@@ -66,7 +143,7 @@
         </div>
 
         <div class="auth-container" id="user-controls" style="display: none;">
-            <button class="btn upload-btn" onclick="triggerUpload()">☁ Upload</button>
+            <button class="btn upload-btn" onclick="triggerUpload()">⬆ Upload</button>
             <button class="btn logout-btn" onclick="doLogout()">Log Out</button>
         </div>
     </header>
@@ -78,6 +155,8 @@
         <div class="nav-item"><span class="icon">🗺️</span>Explore</div>
     </nav>
 
+    <div id="music-hint">Click anywhere to play music! 🎵</div>
+
     <input type="file" id="fileInput" accept="video/*" style="display: none;" onchange="handleFileSelect()">
 
     <div id="login-modal" class="modal">
@@ -85,73 +164,95 @@
             <h2>Welcome Back!</h2>
             <input type="text" id="l-user" class="modal-input" placeholder="Username">
             <input type="password" id="l-pass" class="modal-input" placeholder="Password">
-            <button class="modal-submit" onclick="submitAuth('login')">Login</button>
-            <p onclick="closeModals()" style="cursor:pointer; color:#777;">Cancel</p>
+            <button class="modal-submit" onclick="submitAuth('login')">Let's Go!</button>
+            <p onclick="closeModals()" style="cursor:pointer; color:#999; margin-top:15px;">Close</p>
         </div>
     </div>
 
     <div id="signup-modal" class="modal">
         <div class="modal-box">
-            <h2>Create Account</h2>
-            <input type="text" id="s-user" class="modal-input" placeholder="New Username">
-            <input type="password" id="s-pass" class="modal-input" placeholder="Password">
-            <button class="modal-submit" onclick="submitAuth('signup')">Sign Up</button>
-            <p onclick="closeModals()" style="cursor:pointer; color:#777;">Cancel</p>
+            <h2>Join BitView!</h2>
+            <input type="text" id="s-user" class="modal-input" placeholder="Choose Username">
+            <input type="password" id="s-pass" class="modal-input" placeholder="Create Password">
+            <button class="modal-submit" onclick="submitAuth('signup')">Create Account</button>
+            <p onclick="closeModals()" style="cursor:pointer; color:#999; margin-top:15px;">Close</p>
         </div>
     </div>
 
     <script>
-        // 1. Check Login State on Load
+        // --- 1. AUDIO LOGIC ---
+        const bgMusic = new Audio('assets/mainmenu.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.4;
+
+        // Unlock audio on first click (Browser security requirement)
+        document.body.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().catch(e => console.log("Audio blocked"));
+            }
+        }, { once: true });
+
+        // --- 2. AUTH STATE ---
         const storedUser = localStorage.getItem('bitview_user');
         if (storedUser) {
             setLoggedInState(storedUser);
         }
 
-        // 2. Parental Gate Logic
         function parentalGate() {
-            const a = Math.floor(Math.random() * 9) + 1;
-            const b = Math.floor(Math.random() * 9) + 1;
-            const ans = prompt(`Parents Only: What is ${a} x ${b}?`);
-            if (ans == (a * b)) openModal('signup');
-            else alert("Ask a parent for help!");
-        }
-
-        // 3. Auth Functions
-        function openModal(type) { document.getElementById(type + '-modal').style.display = 'flex'; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-
-        async function submitAuth(type) {
-            const userField = type === 'login' ? 'l-user' : 's-user';
-            const passField = type === 'login' ? 'l-pass' : 's-pass';
-            const user = document.getElementById(userField).value;
-            const pass = document.getElementById(passField).value;
-
-            const res = await fetch(`/api/${type}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: user, password: pass })
-            });
-            
-            const data = await res.json();
-            
-            if (res.ok) {
-                if (type === 'login') {
-                    localStorage.setItem('bitview_user', user);
-                    setLoggedInState(user);
-                }
-                alert(data.message);
-                closeModals();
+            const n1 = Math.floor(Math.random() * 9) + 1;
+            const n2 = Math.floor(Math.random() * 9) + 1;
+            const answer = prompt(`Adults Only: What is ${n1} x ${n2}?`);
+            if (parseInt(answer) === (n1 * n2)) {
+                openModal('signup');
             } else {
-                alert(data.error);
+                alert("Incorrect. Ask a parent to help you join!");
             }
         }
 
-        // 4. UI State Switcher
+        function openModal(type) { 
+            document.getElementById(type + '-modal').style.display = 'flex'; 
+        }
+
+        function closeModals() { 
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); 
+        }
+
+        async function submitAuth(type) {
+            const user = document.getElementById(type === 'login' ? 'l-user' : 's-user').value;
+            const pass = document.getElementById(type === 'login' ? 'l-pass' : 's-pass').value;
+
+            if(!user || !pass) return alert("Fill in both boxes!");
+
+            try {
+                const res = await fetch(`/api/${type}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    if (type === 'login') {
+                        localStorage.setItem('bitview_user', user);
+                        setLoggedInState(user);
+                    }
+                    alert(data.message);
+                    closeModals();
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                alert("Server is sleeping. Try again in a second!");
+            }
+        }
+
         function setLoggedInState(username) {
             document.getElementById('guest-controls').style.display = 'none';
             document.getElementById('user-controls').style.display = 'flex';
-            document.getElementById('userAvatar').innerText = username.charAt(0).toUpperCase();
-            document.getElementById('userAvatar').style.backgroundColor = "#4285F4"; // Blue for logged in
+            const avatar = document.getElementById('userAvatar');
+            avatar.innerText = username.charAt(0).toUpperCase();
+            avatar.style.backgroundColor = "#4285F4";
         }
 
         function doLogout() {
@@ -159,26 +260,26 @@
             location.reload();
         }
 
-        // 5. Video Upload Logic
-        function triggerUpload() { document.getElementById('fileInput').click(); }
-        
+        // --- 3. UPLOAD LOGIC ---
+        function triggerUpload() {
+            document.getElementById('fileInput').click();
+        }
+
         async function handleFileSelect() {
             const file = document.getElementById('fileInput').files[0];
             if (!file) return;
 
-            // Simple validation
-            if (file.size > 50 * 1024 * 1024) return alert("Video is too big! (Limit 50MB)");
+            // Security: Only allow videos under 50MB
+            if (file.size > 50 * 1024 * 1024) {
+                return alert("That video is too big! Keep it under 50MB.");
+            }
 
-            // Simulation of upload
-            const formData = new FormData();
-            formData.append('video', file);
-
-            alert(`Uploading ${file.name}... Please wait.`);
+            alert(`Uploading ${file.name} to BitView Kids...`);
             
-            // Call the dummy endpoint
-            await fetch('/api/upload', { method: 'POST' });
-            
-            alert("Upload Complete! Video sent to moderation.");
+            // Send to backend
+            const res = await fetch('/api/upload', { method: 'POST' });
+            const data = await res.json();
+            alert(data.message);
         }
     </script>
 </body>
