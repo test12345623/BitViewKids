@@ -214,7 +214,6 @@
         bgMusic.volume = 0.4;
         let isMuted = false;
 
-        // The Entry Function: Plays music and hides the screen
         function enterSite() {
             bgMusic.play().catch(e => console.log("Audio play failed", e));
             const screen = document.getElementById('entry-screen');
@@ -224,7 +223,6 @@
             }, 600);
         }
 
-        // The Mute Function
         function toggleMute() {
             isMuted = !isMuted;
             bgMusic.muted = isMuted;
@@ -299,24 +297,45 @@
             location.reload();
         }
 
-        // --- 3. UPLOAD LOGIC ---
+        // --- 3. UPLOAD LOGIC (300MB FIX) ---
         function triggerUpload() {
             document.getElementById('fileInput').click();
         }
 
         async function handleFileSelect() {
-            const file = document.getElementById('fileInput').files[0];
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
             if (!file) return;
 
-            if (file.size > 50 * 1024 * 1024) {
-                return alert("That video is too big! Keep it under 50MB.");
+            // Check if file is over 300MB
+            if (file.size > 300 * 1024 * 1024) {
+                return alert("That video is too big! Keep it under 300MB.");
             }
 
             alert(`Uploading ${file.name} to BitView Kids...`);
             
-            const res = await fetch('/api/upload', { method: 'POST' });
-            const data = await res.json();
-            alert(data.message);
+            // WE NEED TO USE FORMDATA TO SEND FILES
+            const formData = new FormData();
+            formData.append('video', file);
+
+            try {
+                const res = await fetch('/api/upload', { 
+                    method: 'POST',
+                    body: formData // Actual file is sent here
+                });
+                
+                const data = await res.json();
+                if (res.ok) {
+                    alert("Success! Your video is being processed.");
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (err) {
+                alert("Upload failed. Make sure your server is running!");
+            }
+            
+            // Reset input so you can upload the same file again if needed
+            fileInput.value = '';
         }
     </script>
 </body>
