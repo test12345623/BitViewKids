@@ -22,6 +22,35 @@
             overflow-x: hidden;
         }
 
+        /* --- ENTRY SPLASH SCREEN --- */
+        #entry-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; display: flex; justify-content: center;
+            align-items: center; z-index: 9999; transition: opacity 0.6s ease;
+        }
+        .entry-content { text-align: center; }
+        .entry-logo { width: 100px; height: 100px; margin-bottom: 20px; animation: bounce 2s infinite; }
+        .entry-title { color: var(--ytk-blue); font-size: 32px; margin-bottom: 20px; }
+        .entry-btn { 
+            padding: 18px 45px; font-size: 20px; background: var(--ytk-red); 
+            color: white; border: none; border-radius: 50px; cursor: pointer;
+            font-family: 'Fredoka'; box-shadow: 0 5px 0 #9A0007; transition: 0.2s;
+        }
+        .entry-btn:hover { transform: scale(1.05); background: #f44336; }
+        .entry-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #9A0007; }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- MUTE TOGGLE BUTTON --- */
+        #mute-toggle {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 50px; height: 50px; background: white;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid #eee;
+            z-index: 500;
+        }
+
         /* HEADER */
         header { 
             display: flex; 
@@ -112,18 +141,17 @@
             cursor: pointer; font-weight: bold; 
             font-size: 18px; margin-top: 15px;
         }
-
-        /* MUSIC NOTICE */
-        #music-hint {
-            position: fixed; bottom: 20px; left: 20px;
-            background: rgba(0,0,0,0.7); color: white;
-            padding: 8px 15px; border-radius: 20px; font-size: 12px;
-            pointer-events: none; animation: fadeOut 5s forwards;
-        }
-        @keyframes fadeOut { 0% {opacity:1} 80% {opacity:1} 100% {opacity:0} }
     </style>
 </head>
 <body>
+
+    <div id="entry-screen">
+        <div class="entry-content">
+            <img src="assets/logo1.ico" alt="Logo" class="entry-logo">
+            <h1 class="entry-title">Welcome to BitView Kids!</h1>
+            <button class="entry-btn" onclick="enterSite()">Click here to get into BitView Kids!</button>
+        </div>
+    </div>
 
     <header>
         <div class="left">
@@ -155,7 +183,7 @@
         <div class="nav-item"><span class="icon">🗺️</span>Explore</div>
     </nav>
 
-    <div id="music-hint">Click anywhere to play music! 🎵</div>
+    <div id="mute-toggle" onclick="toggleMute()">🔊</div>
 
     <input type="file" id="fileInput" accept="video/*" style="display: none;" onchange="handleFileSelect()">
 
@@ -180,17 +208,28 @@
     </div>
 
     <script>
-        // --- 1. AUDIO LOGIC ---
+        // --- 1. AUDIO ENGINE ---
         const bgMusic = new Audio('assets/mainmenu.mp3');
         bgMusic.loop = true;
         bgMusic.volume = 0.4;
+        let isMuted = false;
 
-        // Unlock audio on first click (Browser security requirement)
-        document.body.addEventListener('click', () => {
-            if (bgMusic.paused) {
-                bgMusic.play().catch(e => console.log("Audio blocked"));
-            }
-        }, { once: true });
+        // The Entry Function: Plays music and hides the screen
+        function enterSite() {
+            bgMusic.play().catch(e => console.log("Audio play failed", e));
+            const screen = document.getElementById('entry-screen');
+            screen.style.opacity = '0';
+            setTimeout(() => {
+                screen.style.display = 'none';
+            }, 600);
+        }
+
+        // The Mute Function
+        function toggleMute() {
+            isMuted = !isMuted;
+            bgMusic.muted = isMuted;
+            document.getElementById('mute-toggle').innerText = isMuted ? "🔇" : "🔊";
+        }
 
         // --- 2. AUTH STATE ---
         const storedUser = localStorage.getItem('bitview_user');
@@ -269,14 +308,12 @@
             const file = document.getElementById('fileInput').files[0];
             if (!file) return;
 
-            // Security: Only allow videos under 50MB
             if (file.size > 50 * 1024 * 1024) {
                 return alert("That video is too big! Keep it under 50MB.");
             }
 
             alert(`Uploading ${file.name} to BitView Kids...`);
             
-            // Send to backend
             const res = await fetch('/api/upload', { method: 'POST' });
             const data = await res.json();
             alert(data.message);
