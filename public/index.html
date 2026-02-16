@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,41 +11,47 @@
         :root { --ytk-blue: #4285F4; --ytk-red: #D32F2F; --bg-light: #FAFAFA; --ytk-dark-blue: #2456CF; }
         body { font-family: 'Fredoka', sans-serif; background: var(--bg-light); margin: 0; overflow-x: hidden; }
 
-        /* ENTRY SPLASH */
+        /* --- ENTRY SPLASH --- */
         #entry-screen { position: fixed; inset: 0; background: white; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.6s; }
         .entry-logo { width: 100px; animation: bounce 2s infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* HEADER */
+        /* --- HEADER --- */
         header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .left { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 45px; height: 45px; background: #CCC; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; color: white; font-weight: bold; }
+        .avatar { width: 45px; height: 45px; background: #CCC; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; color: white; font-weight: bold; font-size: 20px; }
         .avatar img { width: 100%; height: 100%; border-radius: 50%; display: none; object-fit: cover; }
-        .owner-badge { position: absolute; bottom: -5px; right: -5px; background: gold; border: 2px solid white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: none; align-items: center; justify-content: center; }
+        .owner-badge { position: absolute; bottom: -5px; right: -5px; background: gold; border: 2px solid white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: none; align-items: center; justify-content: center; color: black; }
+        
+        .stats-display { font-size: 12px; color: #666; font-weight: 600; }
+        .verified-check { color: var(--ytk-blue); font-size: 14px; margin-left: 3px; display: none; }
 
-        /* SUBS & VIEWS */
-        .stats-display { font-size: 12px; color: #666; display: block; }
-        .view-txt { font-size: 13px; color: #555; margin: 5px 0; display: block; }
+        /* --- UI ELEMENTS --- */
         .btn { padding: 10px 22px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-family: 'Fredoka'; transition: 0.2s; }
-        .btn-red { background: var(--ytk-red); color: white; }
-        .btn-sub { background: #333; color: white; padding: 5px 15px; font-size: 14px; margin-top: 5px; }
+        .btn-red { background: var(--ytk-red); color: white; box-shadow: 0 4px 0 #9A0007; }
+        .btn-sub { background: #333; color: white; padding: 8px 20px; font-size: 14px; margin-top: 10px; }
 
-        /* NAV */
+        /* --- NAV --- */
         .nav { display: flex; justify-content: center; gap: 40px; margin: 25px 0; }
-        .nav-item { opacity: 0.5; cursor: pointer; font-weight: 600; text-align: center; }
+        .nav-item { opacity: 0.5; cursor: pointer; font-weight: 600; text-align: center; font-size: 18px; }
         .nav-item.active { opacity: 1; color: var(--ytk-red); transform: scale(1.1); }
+        .icon { font-size: 30px; display: block; }
 
-        /* VIDEO GRID */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .video-card { background: white; padding: 15px; border-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* --- VIDEO GRID --- */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px; }
+        .video-card { background: white; padding: 15px; border-radius: 25px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); transition: 0.3s; }
+        .video-card:hover { transform: translateY(-5px); }
         .video-container { position: relative; width: 100%; border-radius: 15px; overflow: hidden; background: black; aspect-ratio: 16/9; cursor: pointer; }
         video { width: 100%; height: 100%; display: block; }
+        .view-txt { font-size: 13px; color: #777; margin: 8px 0; display: block; }
 
-        /* STUDIO MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background: white; padding: 30px; border-radius: 30px; text-align: center; width: 350px; }
-        .progress-container { width: 100%; background: #eee; border-radius: 10px; height: 15px; margin: 15px 0; display: none; overflow: hidden; }
-        #progress-bar { width: 0%; height: 100%; background: #4CAF50; }
+        /* --- STUDIO / MODALS --- */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: white; padding: 35px; border-radius: 30px; text-align: center; width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #EEE; border-radius: 15px; font-family: 'Fredoka'; font-size: 16px; outline: none; }
+        
+        .progress-container { width: 100%; background: #F0F0F0; border-radius: 10px; height: 18px; margin: 15px 0; display: none; overflow: hidden; border: 1px solid #DDD; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(to right, #4CAF50, #81C784); transition: width 0.1s; }
     </style>
 </head>
 <body>
@@ -53,8 +59,8 @@
     <div id="entry-screen">
         <div class="entry-content">
             <img src="assets/logo1.ico" class="entry-logo">
-            <h1 style="color: var(--ytk-blue)">BitView Kids</h1>
-            <button class="btn btn-red" onclick="enterSite()">Watch Videos!</button>
+            <h1 style="color: var(--ytk-blue); font-size: 36px;">BitView Kids</h1>
+            <button class="btn btn-red" style="font-size: 20px; padding: 15px 40px;" onclick="enterSite()">Let's Go!</button>
         </div>
     </div>
 
@@ -66,15 +72,19 @@
                 <div id="badge" class="owner-badge">👑</div>
             </div>
             <div>
-                <img src="assets/logo2.png" height="30" onclick="showHome()" style="cursor:pointer;">
+                <img src="assets/logo2.png" height="35" onclick="showHome()" style="cursor:pointer;">
                 <div id="owner-stats" style="display:none;">
-                    <span class="stats-display"><span id="real-subs">0</span> Subs</span>
+                    <span class="stats-display"><span id="real-subs">0</span> Subscribers</span>
+                    <span class="verified-check" id="v-check">✔</span>
                 </div>
             </div>
         </div>
+
         <div id="guest-zone">
             <button class="btn" onclick="openModal('login')">Login</button>
+            <button class="btn" style="background:var(--ytk-blue); color:white" onclick="parentalGate()">Sign Up</button>
         </div>
+
         <div id="user-zone" style="display:none; gap:10px;">
             <button class="btn btn-red" onclick="document.getElementById('fileInput').click()">⬆ Upload</button>
             <button class="btn" onclick="doLogout()">Logout</button>
@@ -82,40 +92,45 @@
     </header>
 
     <nav class="nav">
-        <div class="nav-item active" id="nav-h" onclick="showHome()">🍿 Shows</div>
-        <div class="nav-item" id="nav-c" style="display:none;" onclick="showChannel()">🏠 My Channel</div>
+        <div class="nav-item active" id="nav-h" onclick="showHome()"><span class="icon">🍿</span>Shows</div>
+        <div class="nav-item" id="nav-c" style="display:none;" onclick="showChannel()"><span class="icon">🏠</span>My Channel</div>
     </nav>
 
     <main id="home-pg">
         <div style="text-align:center; padding: 20px;">
-            <h2>⭐ Trending</h2>
+            <h2>⭐ Trending Videos</h2>
             <button class="btn btn-sub" onclick="addSubscriber()">Subscribe to BitViewOfficial</button>
         </div>
         <div class="video-grid" id="trendingGrid"></div>
     </main>
 
     <div id="chan-pg" style="display:none; padding: 20px;">
-        <h2 style="text-align:center;">Your Studio</h2>
+        <h2 style="text-align:center;">My Video Studio</h2>
         <div class="video-grid" id="videoGrid"></div>
     </div>
 
     <div id="upload-modal" class="modal">
         <div class="modal-box">
             <h2>Upload Video</h2>
-            <input type="text" id="vid-name" style="width:90%; padding:10px; margin-bottom:10px;" placeholder="Video Title">
+            <input type="text" id="vid-name" class="modal-input" placeholder="Video Title">
+            <select id="vid-view" class="modal-input">
+                <option value="public">🌍 Public</option>
+                <option value="private">🔒 Private</option>
+            </select>
             <div class="progress-container" id="p-cont">
                 <div id="progress-bar"></div>
             </div>
-            <p id="status-txt" style="font-size:12px; color:var(--ytk-blue)"></p>
-            <button class="btn btn-red" style="width:100%" id="up-finish" onclick="startUpload()">Publish</button>
+            <p id="status-txt" style="font-size:12px; color:var(--ytk-blue); font-weight:bold;"></p>
+            <button class="btn btn-red" style="width:100%" id="up-finish" onclick="startUpload()">Publish Video</button>
+            <p onclick="closeModals()" style="cursor:pointer; color:#999; margin-top:15px;">Cancel</p>
         </div>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-box">
-            <h2>Login</h2>
-            <input type="text" id="l-user" style="width:90%; padding:10px;" placeholder="Username">
-            <button class="btn btn-red" style="width:100%; margin-top:10px;" onclick="login()">Go!</button>
+            <h2>Welcome!</h2>
+            <input type="text" id="l-user" class="modal-input" placeholder="Username">
+            <button class="btn btn-red" style="width:100%; margin-top:10px;" onclick="login()">Enter</button>
         </div>
     </div>
 
@@ -126,9 +141,9 @@
         bgMusic.loop = true;
         let selectedFile = null;
 
-        // REAL-TIME STATS
+        // REAL-TIME STATS (Persists in LocalStorage)
         let subs = parseInt(localStorage.getItem('bitview_subs')) || 0;
-        let allViews = JSON.parse(localStorage.getItem('bitview_video_views')) || {};
+        let videoViews = JSON.parse(localStorage.getItem('bitview_views')) || {};
 
         function updateSubDisplay() {
             document.getElementById('real-subs').innerText = subs.toLocaleString();
@@ -141,10 +156,17 @@
         }
 
         function enterSite() {
-            bgMusic.play();
+            bgMusic.play().catch(e => console.log("Audio waiting..."));
             document.getElementById('entry-screen').style.opacity = '0';
             setTimeout(() => document.getElementById('entry-screen').style.display = 'none', 600);
             loadTrending();
+        }
+
+        function parentalGate() {
+            const n1 = Math.floor(Math.random()*9)+1;
+            const n2 = Math.floor(Math.random()*9)+1;
+            const ans = prompt(`PARENTS: What is ${n1} x ${n2}?`);
+            if(parseInt(ans) === n1*n2) alert("Passed! (Sign Up coming soon)");
         }
 
         function login() {
@@ -158,22 +180,24 @@
             document.getElementById('user-zone').style.display = 'flex';
             document.getElementById('nav-c').style.display = 'block';
 
-            const isOwner = user.toLowerCase().includes('bitviewofficial');
+            const isOwner = user.toLowerCase().includes('bitviewofficial') || user.toLowerCase().includes('bitviewkidsofficial');
             if(isOwner) {
                 document.getElementById('avatarLetter').style.display = 'none';
                 document.getElementById('avatarImg').style.display = 'block';
                 document.getElementById('badge').style.display = 'flex';
                 document.getElementById('owner-stats').style.display = 'block';
+                document.getElementById('v-check').style.display = 'inline';
                 updateSubDisplay();
             } else {
                 document.getElementById('avatarLetter').innerText = user[0].toUpperCase();
+                document.getElementById('userAvatar').style.backgroundColor = 'var(--ytk-blue)';
             }
         }
 
         function openStudio() {
             selectedFile = document.getElementById('fileInput').files[0];
             if(selectedFile) {
-                document.getElementById('vid-name').value = selectedFile.name;
+                document.getElementById('vid-name').value = selectedFile.name.split('.')[0];
                 openModal('upload');
             }
         }
@@ -181,15 +205,27 @@
         function startUpload() {
             const fd = new FormData();
             fd.append('video', selectedFile);
+            
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/api/upload', true);
+
             document.getElementById('p-cont').style.display = 'block';
+            document.getElementById('up-finish').disabled = true;
+
             xhr.upload.onprogress = (e) => {
                 const percent = Math.round((e.loaded / e.total) * 100);
                 document.getElementById('progress-bar').style.width = percent + '%';
                 document.getElementById('status-txt').innerText = `Uploading: ${percent}%`;
             };
-            xhr.onload = () => { alert("Done!"); closeModals(); showChannel(); };
+
+            xhr.onload = () => {
+                alert("Upload Complete!");
+                closeModals();
+                showChannel();
+                // Reset Studio
+                document.getElementById('p-cont').style.display = 'none';
+                document.getElementById('up-finish').disabled = false;
+            };
             xhr.send(fd);
         }
 
@@ -206,6 +242,7 @@
             document.getElementById('chan-pg').style.display = 'block';
             document.getElementById('nav-h').classList.remove('active');
             document.getElementById('nav-c').classList.add('active');
+            
             const res = await fetch('/api/videos');
             const videos = await res.json();
             const grid = document.getElementById('videoGrid');
@@ -216,15 +253,15 @@
         function createVideoCard(file, isOwner) {
             const card = document.createElement('div');
             card.className = 'video-card';
-            const views = allViews[file] || 0;
+            const views = videoViews[file] || 0;
             
             card.innerHTML = `
                 <div class="video-container" onclick="playVideo(this, '${file}')">
-                    <video src="/assets/videos/${file}#t=1" preload="metadata"></video>
+                    <video src="/assets/videos/${file}#t=0.5" preload="metadata"></video>
                 </div>
-                <p style="margin:10px 0 5px 0;"><strong>${file.split('-').slice(1).join('-')}</strong></p>
-                <span class="view-txt">👁️ <span id="view-count-${file.replace(/\./g, '')}">${views}</span> views</span>
-                ${isOwner ? `<button class="btn" style="color:red; padding:5px;" onclick="delV('${file}')">Delete</button>` : ''}
+                <p style="margin:12px 0 5px 0;"><strong>${file.split('-').slice(1).join('-')}</strong></p>
+                <span class="view-txt">👁️ <span id="v-count-${file.replace(/\./g, '')}">${views}</span> views</span>
+                ${isOwner ? `<button class="btn" style="color:red; font-size:12px; padding:5px 10px;" onclick="delV('${file}')">🗑️ Delete Video</button>` : ''}
             `;
             return card;
         }
@@ -232,24 +269,22 @@
         function playVideo(container, fileName) {
             const v = container.querySelector('video');
             if(v.paused) {
-                // INCREASE VIEWS
-                allViews[fileName] = (allViews[fileName] || 0) + 1;
-                localStorage.setItem('bitview_video_views', JSON.stringify(allViews));
-                
-                // Update UI instantly
-                const viewSpan = document.getElementById(`view-count-${fileName.replace(/\./g, '')}`);
-                if(viewSpan) viewSpan.innerText = allViews[fileName];
+                // View Count Logic
+                videoViews[fileName] = (videoViews[fileName] || 0) + 1;
+                localStorage.setItem('bitview_views', JSON.stringify(videoViews));
+                const vDisplay = document.getElementById(`v-count-${fileName.replace(/\./g, '')}`);
+                if(vDisplay) vDisplay.innerText = videoViews[fileName];
 
-                bgMusic.pause();
+                bgMusic.pause(); // MUTE MUSIC
                 v.play();
                 v.controls = true;
                 v.onpause = () => { if(!document.querySelector('video:not(.paused)')) bgMusic.play(); };
-                v.onended = () => bgMusic.play();
+                v.onended = () => bgMusic.play(); // UNMUTE MUSIC
             }
         }
 
         async function delV(f) {
-            if(confirm("Delete?")) {
+            if(confirm("Delete this video forever?")) {
                 await fetch(`/api/videos/${f}`, { method: 'DELETE' });
                 showChannel();
             }
