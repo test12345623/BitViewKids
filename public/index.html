@@ -8,161 +8,168 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --ytk-blue: #4285F4; --ytk-red: #D32F2F; --bg-light: #FAFAFA; --ytk-dark-blue: #2456CF; }
-        body { font-family: 'Fredoka', sans-serif; background: var(--bg-light); margin: 0; }
+        :root { --blue: #4285F4; --red: #D32F2F; --bg: #FAFAFA; }
+        body { font-family: 'Fredoka', sans-serif; background: var(--bg); margin: 0; }
 
-        /* HEADER & AVATAR */
-        header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .avatar { 
-            width: 45px; height: 45px; background: #CCC; border-radius: 50%; 
-            color: white; display: flex; align-items: center; justify-content: center; 
-            font-size: 20px; font-weight: bold; position: relative; overflow: visible;
+        /* --- STARTUP SCREEN --- */
+        #splash {
+            position: fixed; inset: 0; background: white; 
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; z-index: 9999; transition: 0.6s;
         }
-        .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: none; }
-        .owner-badge { position: absolute; bottom: -5px; right: -5px; background: gold; border: 2px solid white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: none; align-items: center; justify-content: center; z-index: 10; }
+        .bounce { width: 100px; animation: bounce 2s infinite; margin-bottom: 20px; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        /* CHANNEL GRID */
-        #channel-view { display: none; padding: 20px; text-align: center; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
-        .video-card { background: white; padding: 10px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        video { width: 100%; border-radius: 10px; }
+        /* --- HEADER & AVATAR --- */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .avatar { width: 45px; height: 45px; background: #CCC; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; overflow: visible; }
+        .avatar img { width: 100%; height: 100%; border-radius: 50%; display: none; object-fit: cover; }
+        .crown { position: absolute; bottom: -5px; right: -5px; background: gold; border-radius: 50%; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; }
 
-        /* ... existing button and search styles ... */
-        .search-box { flex: 1; display: flex; max-width: 600px; margin: 0 30px; }
-        .search-in { width: 100%; padding: 12px 20px; border-radius: 50px 0 0 50px; border: none; background: #F0F0F0; outline: none; }
-        .search-btn { padding: 0 25px; border-radius: 0 50px 50px 0; border: none; background: var(--ytk-dark-blue); color: white; cursor: pointer; }
-        .btn { padding: 10px 22px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; font-family: 'Fredoka'; }
-        .upload-btn { background: var(--ytk-red); color: white; }
-        .nav { display: flex; justify-content: center; gap: 40px; margin: 25px 0; }
-        .nav-item { text-align: center; opacity: 0.5; cursor: pointer; }
-        .nav-item.active { opacity: 1; color: var(--ytk-red); }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background: white; padding: 40px; border-radius: 30px; text-align: center; width: 320px; }
-        .modal-input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #F0F0F0; border-radius: 15px; }
+        /* --- GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        .card { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        video { width: 100%; border-radius: 12px; background: black; }
+
+        .btn { padding: 10px 20px; border-radius: 50px; border: none; cursor: pointer; font-family: 'Fredoka'; font-weight: 600; }
+        .up-btn { background: var(--red); color: white; }
+        .nav { display: flex; justify-content: center; gap: 30px; margin: 20px 0; }
+        .nav-item { cursor: pointer; opacity: 0.5; }
+        .nav-item.active { opacity: 1; color: var(--red); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+        .box { background: white; padding: 30px; border-radius: 25px; text-align: center; }
     </style>
 </head>
 <body>
 
+    <div id="splash">
+        <img src="assets/logo1.ico" class="bounce">
+        <button class="btn up-btn" style="font-size: 20px; padding: 15px 40px;" onclick="startApp()">Enter BitView Kids!</button>
+    </div>
+
     <header>
-        <div class="left" style="display: flex; align-items: center; gap: 15px;">
-            <div class="avatar" id="userAvatar">
-                <span id="avatarLetter">👤</span>
-                <img id="avatarImg" src="assets/logo1.ico" alt="Owner">
-                <div id="badge" class="owner-badge">👑</div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="avatar" id="pfp">
+                <span id="pfp-txt">👤</span>
+                <img id="pfp-img" src="assets/logo1.ico">
+                <div id="crown" class="crown">👑</div>
             </div>
-            <img src="assets/logo2.png" height="40" onclick="showHome()" style="cursor:pointer;">
+            <img src="assets/logo2.png" height="35" onclick="goHome()" style="cursor:pointer;">
         </div>
-        <div class="search-box">
-            <input type="text" class="search-in" placeholder="Search...">
-            <button class="search-btn">🔍</button>
+        <div id="guest-zone">
+            <button class="btn" onclick="openLogin()">Login</button>
         </div>
-        <div id="guest-controls">
-            <button class="btn" onclick="openModal('login')">Login</button>
-        </div>
-        <div id="user-controls" style="display: none; gap:10px;">
-            <button class="btn upload-btn" onclick="triggerUpload()">⬆ Upload</button>
-            <button class="btn" onclick="doLogout()">Logout</button>
+        <div id="user-zone" style="display:none; gap:10px;">
+            <button class="btn up-btn" onclick="document.getElementById('file').click()">⬆ Upload</button>
+            <button class="btn" onclick="logout()">Logout</button>
         </div>
     </header>
 
     <nav class="nav">
-        <div class="nav-item active" onclick="showHome()">🍿 Shows</div>
-        <div id="channel-btn" class="nav-item" style="display:none;" onclick="showChannel()">🏠 My Channel</div>
+        <div class="nav-item active" id="h-nav" onclick="goHome()">🍿 Shows</div>
+        <div class="nav-item" id="c-nav" style="display:none;" onclick="goChannel()">🏠 My Channel</div>
     </nav>
 
-    <div id="main-feed" style="text-align:center; padding: 50px;">
-        <h2>Welcome to the Home Feed!</h2>
-        <p>Videos from everyone appear here.</p>
+    <div id="home-pg" style="text-align: center; padding-top: 50px;">
+        <h2>🎥 Trending Now</h2>
     </div>
 
-    <div id="channel-view">
-        <h2 id="channel-name">My Channel</h2>
-        <div class="video-grid" id="videoGrid">
-            </div>
+    <div id="chan-pg" style="display:none;">
+        <h2 style="text-align:center;">My Videos</h2>
+        <div class="grid" id="v-grid"></div>
     </div>
 
-    <input type="file" id="fileInput" accept="video/*" style="display: none;" onchange="handleFileSelect()">
+    <input type="file" id="file" hidden accept="video/*" onchange="uploadFile()">
 
-    <div id="login-modal" class="modal"><div class="modal-box"><h2>Login</h2><input type="text" id="l-user" class="modal-input" placeholder="Username"><button class="btn" style="width:100%; background:var(--ytk-blue); color:white;" onclick="submitAuth()">Go!</button></div></div>
+    <div id="login-modal" class="modal">
+        <div class="box">
+            <h3>Login</h3>
+            <input type="text" id="user-in" placeholder="Username" style="padding:10px; border-radius:10px; border:1px solid #ddd; margin-bottom:10px;"><br>
+            <button class="btn up-btn" onclick="login()">Let's Go!</button>
+        </div>
+    </div>
 
     <script>
-        function setLoggedInState(username) {
-            localStorage.setItem('bitview_user', username);
-            document.getElementById('guest-controls').style.display = 'none';
-            document.getElementById('user-controls').style.display = 'flex';
-            document.getElementById('channel-btn').style.display = 'block';
+        const music = new Audio('assets/mainmenu.mp3');
+        music.loop = true;
 
-            const letter = document.getElementById('avatarLetter');
-            const img = document.getElementById('avatarImg');
-            const badge = document.getElementById('badge');
+        function startApp() {
+            music.play();
+            document.getElementById('splash').style.opacity = '0';
+            setTimeout(() => document.getElementById('splash').style.display = 'none', 600);
+        }
 
-            if (username.toLowerCase() === 'bitviewofficial') {
-                letter.style.display = 'none';
-                img.style.display = 'block'; // SHOW LOGO1.ICO
-                badge.style.display = 'flex';
+        function setUI(name) {
+            localStorage.setItem('user', name);
+            document.getElementById('guest-zone').style.display = 'none';
+            document.getElementById('user-zone').style.display = 'flex';
+            document.getElementById('c-nav').style.display = 'block';
+            
+            const img = document.getElementById('pfp-img');
+            const txt = document.getElementById('pfp-txt');
+            const crown = document.getElementById('crown');
+
+            if(name.toLowerCase() === 'bitviewofficial') {
+                img.style.display = 'block';
+                txt.style.display = 'none';
+                crown.style.display = 'flex';
             } else {
-                letter.style.display = 'block';
-                letter.innerText = username.charAt(0).toUpperCase();
-                img.style.display = 'none';
-                badge.style.display = 'none';
-                document.getElementById('userAvatar').style.backgroundColor = 'var(--ytk-blue)';
+                txt.innerText = name[0].toUpperCase();
+                document.getElementById('pfp').style.background = '#4285F4';
             }
         }
 
-        async function showChannel() {
-            document.getElementById('main-feed').style.display = 'none';
-            const view = document.getElementById('channel-view');
-            view.style.display = 'block';
+        async function goChannel() {
+            document.getElementById('home-pg').style.display = 'none';
+            document.getElementById('chan-pg').style.display = 'block';
+            document.getElementById('h-nav').classList.remove('active');
+            document.getElementById('c-nav').classList.add('active');
             
-            const grid = document.getElementById('videoGrid');
-            grid.innerHTML = "Loading your videos...";
-
             const res = await fetch('/api/videos');
-            const videos = await res.json();
-            
+            const files = await res.json();
+            const grid = document.getElementById('v-grid');
             grid.innerHTML = "";
-            videos.forEach(file => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <video controls src="/assets/videos/${file}"></video>
-                    <p style="font-size:12px; color:gray;">${file.split('-')[1]}</p>
-                `;
-                grid.appendChild(card);
+            files.forEach(f => {
+                grid.innerHTML += `<div class="card">
+                    <video controls src="/assets/videos/${f}"></video>
+                    <button class="btn" style="color:red" onclick="delV('${f}')">Delete</button>
+                </div>`;
             });
         }
 
-        function showHome() {
-            document.getElementById('main-feed').style.display = 'block';
-            document.getElementById('channel-view').style.display = 'none';
+        async function delV(name) {
+            if(confirm("Delete?")) {
+                await fetch(`/api/videos/${name}`, { method: 'DELETE' });
+                goChannel();
+            }
         }
 
-        async function submitAuth() {
-            const user = document.getElementById('l-user').value;
-            if(!user) return;
-            // Simplified for demo
-            setLoggedInState(user);
-            closeModals();
+        function goHome() {
+            document.getElementById('home-pg').style.display = 'block';
+            document.getElementById('chan-pg').style.display = 'none';
+            document.getElementById('h-nav').classList.add('active');
+            document.getElementById('c-nav').classList.remove('active');
         }
 
-        function triggerUpload() { document.getElementById('fileInput').click(); }
-
-        async function handleFileSelect() {
-            const file = document.getElementById('fileInput').files[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append('video', file);
-            alert("Uploading...");
-            const res = await fetch('/api/upload', { method: 'POST', body: formData });
-            if(res.ok) { alert("Done!"); showChannel(); }
+        function login() {
+            const val = document.getElementById('user-in').value;
+            if(val) { setUI(val); document.getElementById('login-modal').style.display='none'; }
         }
 
-        function openModal(t) { document.getElementById(t+'-modal').style.display='flex'; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
-        function doLogout() { localStorage.removeItem('bitview_user'); location.reload(); }
+        async function uploadFile() {
+            const file = document.getElementById('file').files[0];
+            if(file.size > 300*1024*1024) return alert("Too big!");
+            const fd = new FormData();
+            fd.append('video', file);
+            await fetch('/api/upload', { method: 'POST', body: fd });
+            goChannel();
+        }
 
-        const saved = localStorage.getItem('bitview_user');
-        if(saved) setLoggedInState(saved);
+        function openLogin() { document.getElementById('login-modal').style.display='flex'; }
+        function logout() { localStorage.clear(); location.reload(); }
+
+        const saved = localStorage.getItem('user');
+        if(saved) setUI(saved);
     </script>
 </body>
 </html>
