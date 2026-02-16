@@ -7,24 +7,21 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// IMPORTANT: Serve the 'public' folder as root
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 1. SAFE FOLDER CREATION
-const assetsDir = path.join(__dirname, 'public/assets');
-const videoDir = path.join(__dirname, 'public/assets/videos');
+// Persistent Folder Setup
+const videoDir = path.join(__dirname, 'public', 'assets', 'videos');
 
-// Ensure public/assets/videos exists so Multer doesn't error out
-if (!fs.existsSync(assetsDir)) {
-    fs.mkdirSync(assetsDir, { recursive: true });
-}
 if (!fs.existsSync(videoDir)) {
     fs.mkdirSync(videoDir, { recursive: true });
 }
 
-// 2. MULTER CONFIG
+// Multer Storage Configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/assets/videos/');
+        cb(null, videoDir); // Absolute path prevents "missing folder" errors
     },
     filename: (req, file, cb) => {
         const uniqueName = Date.now() + '-' + file.originalname.replace(/\s/g, '_');
@@ -34,24 +31,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
     storage: storage,
-    limits: { fileSize: 300 * 1024 * 1024 } // 300MB
+    limits: { fileSize: 500 * 1024 * 1024 } // Increased to 500MB
 });
 
-// 3. ROUTES
-app.post('/api/login', (req, res) => {
-    try {
-        const { username } = req.body;
-        let role = (username && username.toLowerCase() === "bitviewofficial") ? "owner" : "user";
-        res.json({ message: "Welcome!", username, role });
-    } catch (e) {
-        res.status(500).json({ error: "Login failed" });
-    }
-});
-
+// API Routes
 app.get('/api/videos', (req, res) => {
     fs.readdir(videoDir, (err, files) => {
-        if (err) return res.json([]);
-        res.json(files.filter(f => !f.startsWith('.')));
+        if (err) return res.status(500).json([]);
+        // Filter out hidden files and return the list
+        const videoFiles = files.filter(f => !f.startsWith('.'));
+        res.json(videoFiles);
     });
 });
 
@@ -66,22 +55,10 @@ app.delete('/api/videos/:name', (req, res) => {
         fs.unlinkSync(filePath);
         res.json({ message: "Deleted" });
     } else {
-        res.status(404).send("Not found");
+        res.status(404).json({ error: "File not found" });
     }
-});
-
-// 4. ERROR HANDLING (Prevents Status 1 Crashes)
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 BitView Kids is running at http://localhost:${PORT}`);
-}).on('error', (e) => {
-    if (e.code === 'EADDRINUSE') {
-        console.log(`❌ Port ${PORT} is busy. Try closing other terminal windows!`);
-    } else {
-        console.log(e);
-    }
+    console.log(`🚀 BitView Kids running at http://localhost:${PORT}`);
 });
